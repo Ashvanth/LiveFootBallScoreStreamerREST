@@ -1,13 +1,14 @@
 package com.example.sportradar.LiveFootBallScoreStreamer;
 
-import com.example.sportradar.LiveFootBallScoreStreamer.domain.Match;
+import com.example.sportradar.LiveFootBallScoreStreamer.dao.MatchRepositoryImpl;
+import com.example.sportradar.LiveFootBallScoreStreamer.domain.MatchDTO;
 import com.example.sportradar.LiveFootBallScoreStreamer.service.FootballScoreBoard;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -20,58 +21,52 @@ class LiveFootBallScoreStreamerApplicationTests {
 
 	private FootballScoreBoard scoreBoard;
 
+	private MatchDTO matchDTO;
+
+	@Autowired
+	private MatchRepositoryImpl matchRepository;
+
 	@BeforeEach
 	public void setUp() {
-		scoreBoard = new FootballScoreBoard();
+		scoreBoard = new FootballScoreBoard(matchRepository);
 	}
 
 	@Test
+	@Order(1)
 	public void testStartGame() {
-		scoreBoard.startGame("Germany", "Canada");
-		List<Match> summary = scoreBoard.getSummaryByTotalScore();
-		assertEquals(1, summary.size());
-		assertEquals("Canada", summary.get(0).getAwayTeam());
-		assertEquals("Germany", summary.get(0).getHomeTeam());
+		scoreBoard.startGame("France", "Argentina");
+		scoreBoard.startGame("Japan", "China");
+		List<MatchDTO> summary = scoreBoard.getSummaryByTotalScore();
+		assertEquals("Argentina", summary.get(0).getAwayTeam());
+		assertEquals("France", summary.get(0).getHomeTeam());
 		assertEquals(0,summary.get(0).getHomeScore());
 		assertEquals(0,summary.get(0).getAwayScore());
 	}
 
 	@Test
+	@Order(2)
 	public void testUpdateGame() {
-		scoreBoard.startGame("Germany", "Canada");
-		scoreBoard.updateScore("Germany", "Canada",5,10);
-
-		List<Match> summary = scoreBoard.getSummaryByTotalScore();
-		assertEquals("Canada", summary.get(0).getAwayTeam());
-		assertEquals("Germany", summary.get(0).getHomeTeam());
-		assertEquals(5,summary.get(0).getHomeScore());
-		assertEquals(10,summary.get(0).getAwayScore());
+		matchDTO = matchDTO.builder()
+				.homeTeam("France")
+				.homeScore(3)
+				.awayTeam("Argentina")
+				.awayScore(6).build();
+		scoreBoard.updateScore(matchDTO);
+		List<MatchDTO> summary = scoreBoard.getSummaryByTotalScore();
+		assertEquals("Argentina", summary.get(0).getAwayTeam());
+		assertEquals("France", summary.get(0).getHomeTeam());
+		assertEquals(3,summary.get(0).getHomeScore());
+		assertEquals(6,summary.get(0).getAwayScore());
 	}
 
 	@Test
+	@Order(3)
 	public void testFinishGame() {
-		scoreBoard.startGame("Germany", "Canada");
-		scoreBoard.startGame("Spain", "Brazil");
-		scoreBoard.startGame("Italy", "France");
-		scoreBoard.updateScore("Germany", "Canada",5,10);
-		scoreBoard.finishGame("Germany","Canada");
-
-		List<Match> summary = scoreBoard.getSummaryByTotalScore();
-		assertNotEquals("Canada", summary.get(0).getAwayTeam());
-		assertNotEquals("Germany", summary.get(0).getHomeTeam());
-		assertEquals("Spain",summary.get(0).getHomeTeam());
-		assertEquals("Brazil",summary.get(0).getAwayTeam());
-	}
-
-	@Test
-	public void testSummaryOfGame() {
-		scoreBoard.startGame("Germany", "Canada");
-		scoreBoard.updateScore("Germany", "Canada",5,10);
-
-		List<Match> summary = scoreBoard.getSummaryByTotalScore();
-		assertEquals("Canada", summary.get(0).getAwayTeam());
-		assertEquals("Germany", summary.get(0).getHomeTeam());
-		assertEquals(5,summary.get(0).getHomeScore());
-		assertEquals(10,summary.get(0).getAwayScore());
+		scoreBoard.finishGame("Japan","China");
+		List<MatchDTO> summary = scoreBoard.getSummaryByTotalScore();
+		assertNotEquals("China", summary.get(0).getAwayTeam());
+		assertNotEquals("Japan", summary.get(0).getHomeTeam());
+		assertEquals("France",summary.get(0).getHomeTeam());
+		assertEquals("Argentina",summary.get(0).getAwayTeam());
 	}
 }
