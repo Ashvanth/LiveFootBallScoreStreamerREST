@@ -86,7 +86,7 @@ public class FootballScoreBoard {
     public Long findMatchId(MatchDTO matchDTO) {
         List<MatchDTO> matchDTOList =  matchRepository.findAll();
         Optional<MatchDTO> matchDTOObj = matchDTOList.stream()
-                .filter(matchDTO2 -> matchDTO2.getHomeTeam().equalsIgnoreCase(matchDTO.getHomeTeam()) && matchDTO2.getAwayTeam().equalsIgnoreCase(matchDTO.getAwayTeam()))
+                .filter(matchDTO2 -> (matchDTO2.getHomeTeam().equalsIgnoreCase(matchDTO.getHomeTeam()) && matchDTO2.getAwayTeam().equalsIgnoreCase(matchDTO.getAwayTeam())))
                 .findFirst();
         if(matchDTOObj.isPresent()) {
             return matchDTOObj.get().getId();

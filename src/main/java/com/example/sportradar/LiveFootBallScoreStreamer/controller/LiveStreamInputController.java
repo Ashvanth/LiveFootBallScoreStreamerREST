@@ -61,4 +61,9 @@ public class LiveStreamInputController {
     {
         return footballScoreBoard.finishGame(homeTeam,awayTeam) ?  "Match between "+homeTeam+" and +"+awayTeam+" is finished" : "Match not found" ;
     }
+    @GetMapping("/summary/")
+    public List<MatchDTO> getSummary()
+    {
+        return footballScoreBoard.getSummaryByTotalScore();
+    }
 }
