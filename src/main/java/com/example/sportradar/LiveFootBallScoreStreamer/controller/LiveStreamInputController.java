@@ -41,7 +41,7 @@ public class LiveStreamInputController {
     public String liveScore(@PathVariable  String homeTeam ,
                             @PathVariable  String awayTeam) {
        Optional<MatchDTO> match = footballScoreBoard.liveScore(homeTeam,awayTeam);
-      if(match != null) {
+      if(match!=null) {
           return "Live Score --- " + match.get().getHomeTeam() + " Score is" + " " + match.get().getHomeScore() +
                   " and " + match.get().getAwayTeam() + " Score is " + match.get().getAwayScore();
       }else

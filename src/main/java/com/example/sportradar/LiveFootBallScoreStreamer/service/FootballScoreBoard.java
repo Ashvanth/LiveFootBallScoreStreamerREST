@@ -63,7 +63,12 @@ public class FootballScoreBoard {
         Long matchId = findMatchId(MatchDTO.builder()
                 .homeTeam(homeTeam)
                 .awayTeam(awayTeam).build());
-       return matchRepository.findById(matchId.intValue());
+        if(matchId!=null)
+        {
+       return matchRepository.findById(matchId.intValue());}
+        else {
+            return null;
+        }
     }
     @Transactional
     public Boolean updateScore(MatchDTO matchDTO) {
