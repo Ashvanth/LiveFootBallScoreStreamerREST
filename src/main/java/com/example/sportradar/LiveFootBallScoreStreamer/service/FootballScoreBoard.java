@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
 public class FootballScoreBoard {
 
 
-  private static MatchRepositoryImpl MatchRepository ;
+  private static MatchRepositoryImpl matchRepository ;
 
 
     @Autowired
     public FootballScoreBoard(MatchRepositoryImpl matchRepositoryImpl) {
-        this.MatchRepository = matchRepositoryImpl;
+        this.matchRepository = matchRepositoryImpl;
     }
 
     @Transactional
@@ -34,7 +34,7 @@ public class FootballScoreBoard {
             MatchDTO matchDTO = MatchDTO.builder().
                     homeTeam(homeTeam).
                     awayTeam(awayTeam).build();
-            MatchRepository.save(matchDTO);
+            matchRepository.save(matchDTO);
             return true;
         } else
         {
@@ -45,7 +45,7 @@ public class FootballScoreBoard {
     @Transactional
     public List<MatchDTO> activeMatches()
     {
-        return MatchRepository.findAll();
+        return matchRepository.findAll();
     }
 
     @Transactional
@@ -54,7 +54,7 @@ public class FootballScoreBoard {
                .homeTeam(homeTeam)
                .awayTeam(awayTeam).build());
        if(matchId!= null){
-        MatchRepository.deleteById(matchId.intValue());}
+           matchRepository.deleteById(matchId.intValue());}
     }
 
     @Transactional
@@ -63,22 +63,22 @@ public class FootballScoreBoard {
         Long matchId = findMatchId(MatchDTO.builder()
                 .homeTeam(homeTeam)
                 .awayTeam(awayTeam).build());
-       return MatchRepository.findById(matchId.intValue());
+       return matchRepository.findById(matchId.intValue());
     }
     @Transactional
     public Boolean updateScore(MatchDTO matchDTO) {
         Long matchId = findMatchId(matchDTO);
         if(matchId!= null){
-       Optional<MatchDTO> matchDTOFromDB = MatchRepository.findById(Integer.valueOf(matchId.intValue()));
+       Optional<MatchDTO> matchDTOFromDB = matchRepository.findById(Integer.valueOf(matchId.intValue()));
        matchDTOFromDB.get().setHomeScore(matchDTO.getHomeScore());
         matchDTOFromDB.get().setAwayScore(matchDTO.getAwayScore());
-        MatchRepository.save(matchDTOFromDB.get());
+            matchRepository.save(matchDTOFromDB.get());
         return true;
         }else {return false;}
     }
 
     public Long findMatchId(MatchDTO matchDTO) {
-        List<MatchDTO> matchDTOList =  MatchRepository.findAll();
+        List<MatchDTO> matchDTOList =  matchRepository.findAll();
         Optional<MatchDTO> matchDTOObj = matchDTOList.stream()
                 .filter(matchDTO2 -> matchDTO2.getHomeTeam().equalsIgnoreCase(matchDTO.getHomeTeam()) && matchDTO2.getAwayTeam().equalsIgnoreCase(matchDTO.getAwayTeam()))
                 .findFirst();
@@ -89,7 +89,7 @@ public class FootballScoreBoard {
 
     @Transactional
     public List<MatchDTO> getSummaryByTotalScore() {
-        List<MatchDTO> matchDTOList =  MatchRepository.findAll();
+        List<MatchDTO> matchDTOList =  matchRepository.findAll();
         return matchDTOList.stream()
                 .sorted(Comparator.comparingInt(MatchDTO::getTotalScore).reversed().thenComparing(matchDTOList::indexOf))
                 .collect(Collectors.toList());
