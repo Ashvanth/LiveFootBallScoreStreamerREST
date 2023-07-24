@@ -49,12 +49,13 @@ public class FootballScoreBoard {
     }
 
     @Transactional
-    public void finishGame(String homeTeam, String awayTeam) {
+    public Boolean finishGame(String homeTeam, String awayTeam) {
        Long matchId = findMatchId(MatchDTO.builder()
                .homeTeam(homeTeam)
                .awayTeam(awayTeam).build());
        if(matchId!= null){
-           matchRepository.deleteById(matchId.intValue());}
+           matchRepository.deleteById(matchId.intValue());
+       return true;} else {return  false;}
     }
 
     @Transactional

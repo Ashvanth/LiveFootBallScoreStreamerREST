@@ -59,7 +59,6 @@ public class LiveStreamInputController {
     public String finishGame(@PathVariable String homeTeam,
                               @PathVariable String awayTeam)
     {
-        footballScoreBoard.finishGame(homeTeam,awayTeam);
-        return "Match between "+homeTeam+" and +"+awayTeam+" is finished";
+        return footballScoreBoard.finishGame(homeTeam,awayTeam) ?  "Match between "+homeTeam+" and +"+awayTeam+" is finished" : "Match not found" ;
     }
 }
