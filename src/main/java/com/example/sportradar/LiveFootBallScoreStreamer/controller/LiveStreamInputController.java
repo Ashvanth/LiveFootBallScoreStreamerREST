@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +32,13 @@ public class LiveStreamInputController {
     @PostMapping("/startGame/{homeTeam}/{awayTeam}")
     public String startGame(@PathVariable  String homeTeam ,
                             @PathVariable  String awayTeam) throws Exception {
-        return  footballScoreBoard.startGame(homeTeam,awayTeam) ?  String.format("Football Match between %s and %s has started",homeTeam,awayTeam) :
-                "Review homeTeam and AwayTeam name";
+        try {
+            return footballScoreBoard.startGame(homeTeam, awayTeam) ? String.format("Football Match between %s and %s has started", homeTeam, awayTeam) :
+                    "Review homeTeam and AwayTeam name";
+        }catch (SQLException e){
+            return e.getMessage();
+        }
+
     }
 
 

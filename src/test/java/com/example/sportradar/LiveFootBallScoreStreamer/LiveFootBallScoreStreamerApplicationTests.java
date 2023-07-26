@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.sql.SQLException;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -33,7 +35,7 @@ class LiveFootBallScoreStreamerApplicationTests {
 
 	@Test
 	@Order(1)
-	public void testStartGame() {
+	public void testStartGame() throws SQLException {
 		scoreBoard.startGame("France", "Argentina");
 		scoreBoard.startGame("Japan", "China");
 		List<MatchDTO> summary = scoreBoard.getSummaryByTotalScore();

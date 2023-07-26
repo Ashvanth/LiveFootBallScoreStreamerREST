@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +31,7 @@ public class FootballScoreBoard {
     }
 
     @Transactional
-    public Boolean startGame(String homeTeam, String awayTeam) {
+    public Boolean startGame(String homeTeam, String awayTeam) throws SQLException {
         if(isValidTeamName(homeTeam) && isValidTeamName(awayTeam)) {
             MatchDTO matchDTO = MatchDTO.builder().
                     homeTeam(homeTeam).
