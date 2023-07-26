@@ -30,8 +30,8 @@ public class LiveStreamInputController {
 
     @PostMapping("/startGame/{homeTeam}/{awayTeam}")
     public String startGame(@PathVariable  String homeTeam ,
-                            @PathVariable  String awayTeam) {
-        return  footballScoreBoard.startGame(homeTeam,awayTeam) ?  "Football Match between "+homeTeam+"  "+"and"+ " "+awayTeam+" has started" :
+                            @PathVariable  String awayTeam) throws Exception {
+        return  footballScoreBoard.startGame(homeTeam,awayTeam) ?  String.format("Football Match between %s and %s has started",homeTeam,awayTeam) :
                 "Review homeTeam and AwayTeam name";
     }
 
@@ -42,8 +42,7 @@ public class LiveStreamInputController {
                             @PathVariable  String awayTeam) {
        Optional<MatchDTO> match = footballScoreBoard.liveScore(homeTeam,awayTeam);
       if(match!=null) {
-          return "Live Score --- " + match.get().getHomeTeam() + " Score is" + " " + match.get().getHomeScore() +
-                  " and " + match.get().getAwayTeam() + " Score is " + match.get().getAwayScore();
+          return String.format("Live Score of Home Team---  %s is ---> %s and Away Team %s is %s",match.get().getHomeTeam(),match.get().getHomeScore(),match.get().getAwayTeam(),match.get().getAwayScore());
       }else
       {
           return "Something is Wrong with Match information";
